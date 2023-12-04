@@ -105,7 +105,7 @@ with tab1:
     with col2:
         st.subheader('AVG Rating per Product Count')
         avg_rating = round(df['rating'].mean(),3)
-        st.metric(label="Average Product Rating", value=avg_rating)
+        st.metric(label="Product Count", value=avg_rating)
     with col3:
         st.subheader('Product Count')
         product_count = len(df)
