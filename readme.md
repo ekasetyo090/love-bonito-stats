@@ -17,25 +17,15 @@ web app ini dibuat untuk mempermudah memahami statistik data dengan cara visuali
 
 
 ## Screenshots
-https://github.com/ekasetyo090/youtube-trend-analizer/blob/cce12b7ad44fa22572d38f832f8e7e0f027f65e2/main/keyword_trend_by_day.png
-Here are some screenshots illustrating the script's visualizations:
+Here are some screenshots illustrating the web app's visualizations:
 
-![Keyword Trend Over Time](https://github.com/ekasetyo090/youtube-trend-analizer/blob/cce12b7ad44fa22572d38f832f8e7e0f027f65e2/main/keyword_trend_over_time.png)
+![Overall statistics](https://github.com/ekasetyo090/love-bonito-stats/blob/4dc9386e5950414029c991b68e02155fc2e709f5/screenshot/header.png)
 
-![Keyword Trend by Day](https://github.com/ekasetyo090/youtube-trend-analizer/blob/0e19f49c79bd04a361ba0dc471939cb70a74352a/main/screenshots/keyword_trend_by_day.png)
+![Google Search traffic](https://github.com/ekasetyo090/love-bonito-stats/blob/4dc9386e5950414029c991b68e02155fc2e709f5/screenshot/traffic.png)
 
-![Keyword Trend by Hour](https://github.com/ekasetyo090/youtube-trend-analizer/blob/cce12b7ad44fa22572d38f832f8e7e0f027f65e2/main/keyword_trend_by_hour.png)
+![Revenue by rating](https://github.com/ekasetyo090/love-bonito-stats/blob/4dc9386e5950414029c991b68e02155fc2e709f5/screenshot/revenue%20by%20rating.png)
 
-## Contributing
+![View by rating on a category](https://github.com/ekasetyo090/love-bonito-stats/blob/4dc9386e5950414029c991b68e02155fc2e709f5/screenshot/views%20by%20rating%20on%20category.png)
 
-Contributions to this project are welcome! If you'd like to enhance the script, fix issues, or add new features, please open an issue or submit a pull request. Your contributions can help improve the functionality and usability of this tool for everyone.
-
-## License
-
-This project is free to use.
-
----
-
-By leveraging the power of Google Trends data, the Google Trends Keyword Analysis script empowers you to make data-driven decisions that can significantly impact your content, marketing, and overall strategy. Start using the script today and discover valuable insights that can drive your success in the digital landscape.
 
 
