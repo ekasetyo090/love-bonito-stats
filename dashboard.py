@@ -107,7 +107,7 @@ def main_data_plot(temp_df,labels:str,sort_labels:list,ascendings,numbers:int,ye
     ax.set_title(titles)
     for p in ax.patches:
         if p.get_width()<999:
-            temp_anotate=p.get_width()
+            temp_anotate=round(p.get_width(),4)
             pass
         else:
             temp_anotate = f'{p.get_width():,.0f}'
