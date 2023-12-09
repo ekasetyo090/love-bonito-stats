@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 import matplotlib as mpl
-from sklearn.linear_model import LinearRegression
+
 
 
 st.set_page_config(
