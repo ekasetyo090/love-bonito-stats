@@ -106,9 +106,11 @@ def main_data_plot(temp_df,labels:str,sort_labels:list,ascendings,numbers:int,ye
     ax.set(ylabel="Product Name")
     ax.set_title(titles)
     for p in ax.patches:
-        if p.get_width()<999:
+        if p.get_width()<=1:
             temp_anotate=round(p.get_width(),4)
-            pass
+
+        elif 1< p.get_width()<999:
+            temp_anotate=p.get_width()
         else:
             temp_anotate = f'{p.get_width():,.0f}'
             ax.xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
