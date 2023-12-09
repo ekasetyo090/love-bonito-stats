@@ -14,7 +14,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# load csv
+
 @st.cache_data
 def load_csv(data):
     temp_df = pd.read_csv(data)
@@ -41,7 +41,6 @@ def load_geomap_csv(data):
     temp_df["traffic"] = pd.to_numeric(temp_df["traffic"])
     temp_df['province'] = temp_df.index
     temp_df = temp_df.dropna()
-    
     return temp_df
 
 def timeline_line_plot(df,title:str):
@@ -83,11 +82,13 @@ def geoMap_plot(df,title:str):
     return fig
 
 
-def test_plot_year(temp_df,labels:str,sort_labels:list,ascendings,numbers:int,years,titles:str,category:str):
+def main_data_plot(temp_df,labels:str,sort_labels:list,ascendings,numbers:int,years,titles:str,category:str):
     if years != "All":
         temp_df = temp_df.loc[(temp_df['dateCreate'].dt.year == years)]
+
     if category !='All':
         temp_df = temp_df.loc[(temp_df['category_name'] == category)]
+
     temp_df = temp_df.sort_values(sort_labels,ascending=ascendings)
     temp_df = temp_df[:numbers]
     for i in range(len(temp_df)):
@@ -99,6 +100,7 @@ def test_plot_year(temp_df,labels:str,sort_labels:list,ascendings,numbers:int,ye
             colors.append('#fc0303')
         else:
             colors.append('#f76565')
+
     fig = plt.figure(figsize=(9, 6))
     ax = sns.barplot(data=temp_df, x=labels, y='product_name',hue='product_name',palette=colors)
     ax.set(ylabel="Product Name")
@@ -115,6 +117,7 @@ def test_plot_year(temp_df,labels:str,sort_labels:list,ascendings,numbers:int,ye
     for p in ax.patches:
         if p.get_width() <1:
             temp_anotate=round(p.get_width(),2)
+
         else:
             temp_anotate = f'{p.get_width():,.0f}'
             
@@ -169,8 +172,8 @@ def main():
         col1, col2, col3, col4 = st.columns(4,gap="small")
         with st.container():
             with col1:
-                number = st.number_input("Number of data to visualize", value=5)
-                main_catergory = st.selectbox('Product category', ['All',"Midi Dress","Blouse Wanita","Celana Panjang Wanita",
+                number_data_to_plot = st.number_input("Number of data to visualize", value=5)
+                main_catergory_select_box = st.selectbox('Product category', ['All',"Midi Dress","Blouse Wanita","Celana Panjang Wanita",
                                                                     "Tank Top Wanita","Jumpsuit & Playsuit","Rok Wanita",
                                                                     "Mini Dress","Celana Pendek Wanita","Maxi Dress",
                                                                     "Kemeja Wanita","Blazer Wanita","Crop Top Wanita",
@@ -191,25 +194,27 @@ def main():
                                                                     "Scarf & Shawl Wanita","Blouse Muslim Wanita",
                                                                     "Abaya","Kemeja Denim Pria"], index=0,)
             with col2:
-                main_df_visualize = st.selectbox('Select data to visualize', ['Rating', 'Views', 'Review Count', 'Sold Count','Transaction Reject', 'Discussion Count','Price','Stock Avaiable','Sold Per View Ratio','Product Revenue'], index=9,)
-                main_df_year = st.selectbox('Select year of product release', ['All',2020,2021,2022,2023], index=0,)
-            with col3:
-                main_df_sort = st.multiselect('Sort by',['Rating', 'Views', 'Review Count', 'Sold Count','Transaction Reject', 'Discussion Count','Product Name','Price','Stock Avaiable','Sold Per View Ratio','Product Revenue'],default=['Rating','Review Count'])
-            with col4:
-                main_df_sort_term = st.radio("Sort terms", ["A-Z", "Z-A"], captions = ["Ascending","Descending"],index=1)
-        
-        main_df_dict_visualize = {'Rating':'rating', 
-                                'Views':'countView', 
-                                'Review Count':'countReview', 
-                                'Sold Count':'countSold',
-                                'Transaction Reject':'transactionReject', 
-                                'Discussion Count':'countTalk',
-                                'Price':'product_price',
-                                'Stock Avaiable':'stockValue',
-                                'Sold Per View Ratio':'soldPerViewRatio',
-                                'Product Revenue':'productRevenue'}
+                colomnn_to_plot_select_box = st.selectbox('Select data to visualize', ['Rating', 'Views', 'Review Count', 'Sold Count','Transaction Reject', 'Discussion Count','Price','Stock Avaiable','Sold Per View Ratio','Product Revenue'], index=9,)
+                year_filter_select_box = st.selectbox('Select year of product release', ['All',2020,2021,2022,2023], index=0,)
 
-        main_df_dict_sort = {'Rating':'rating',
+            with col3:
+                sort_filter_by_column = st.multiselect('Sort by',['Rating', 'Views', 'Review Count', 'Sold Count','Transaction Reject', 'Discussion Count','Product Name','Price','Stock Avaiable','Sold Per View Ratio','Product Revenue'],default=['Rating','Review Count'])
+            
+            with col4:
+                sort_filter_order = st.radio("Sort terms", ["A-Z", "Z-A"], captions = ["Ascending","Descending"],index=1)
+        
+        colomnn_to_plot_select_box_dict = {'Rating':'rating', 
+                                            'Views':'countView', 
+                                            'Review Count':'countReview', 
+                                            'Sold Count':'countSold',
+                                            'Transaction Reject':'transactionReject', 
+                                            'Discussion Count':'countTalk',
+                                            'Price':'product_price',
+                                            'Stock Avaiable':'stockValue',
+                                            'Sold Per View Ratio':'soldPerViewRatio',
+                                            'Product Revenue':'productRevenue'}
+
+        sort_filter_by_column_dict = {'Rating':'rating',
                                 'Product Name':'product_name',
                                 'Views':'countView', 
                                 'Review Count':'countReview', 
@@ -220,18 +225,22 @@ def main():
                                 'Stock Avaiable':'stockValue',
                                 'Sold Per View Ratio':'soldPerViewRatio',
                                 'Product Revenue':'productRevenue'}
-        main_df_dict_sort_term = {"A-Z":True,"Z-A":False}
-        main_df_dict_sort_term_title = {"A-Z":'Botom',"Z-A":'Top'}
-        visual_labels = main_df_dict_visualize.get(main_df_visualize)
-        sort_list = []
-        for i in main_df_sort:
-            temp_data = main_df_dict_sort.get(i)
-            sort_list.append(temp_data)
-        temp_title = f'{main_df_dict_sort_term_title.get(main_df_sort_term)} {number} {main_df_visualize} Product Statistics (Year: {main_df_year})'
-        if len(main_df_sort)>0:
-           
-            temp_plot = test_plot_year(df,labels=visual_labels,sort_labels=sort_list,ascendings=main_df_dict_sort_term.get(main_df_sort_term),numbers=number,years=main_df_year,titles=temp_title,category=main_catergory)
+
+        sort_filter_order_dict = {"A-Z":True,"Z-A":False}
+        plot_title_sort_order_dict = {"A-Z":'Botom',"Z-A":'Top'}
+        column_to_plot_value = colomnn_to_plot_select_box_dict.get(colomnn_to_plot_select_box)
+        sort_filter_by_column_list = []
+
+        for i in sort_filter_by_column:
+            temp_data = sort_filter_by_column_dict.get(i)
+            sort_filter_by_column_list.append(temp_data)
+
+        plot_title = f'{plot_title_sort_order_dict.get(sort_filter_order)} {number_data_to_plot} {colomnn_to_plot_select_box} Product Statistics (Year: {year_filter_select_box})'
+        
+        if len(sort_filter_by_column)>0:
+            temp_plot = main_data_plot(df,labels=column_to_plot_value,sort_labels=sort_filter_by_column_list,ascendings=sort_filter_order_dict.get(sort_filter_order),numbers=number_data_to_plot,years=year_filter_select_box,titles=plot_title,category=main_catergory_select_box)
             st.pyplot(fig=temp_plot, clear_figure=None, use_container_width=True)
+
         else:
             pass
 
