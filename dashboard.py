@@ -107,22 +107,17 @@ def main_data_plot(temp_df,labels:str,sort_labels:list,ascendings,numbers:int,ye
     ax.set_title(titles)
     for p in ax.patches:
         if p.get_width()<999:
+            temp_anotate=p.get_width()
             pass
         else:
+            temp_anotate = f'{p.get_width():,.0f}'
             ax.xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
             ax.xaxis.set_major_formatter(mpl.ticker.StrMethodFormatter('{x:,.0f}'))
             # Rotating X-axis labels
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
-    for p in ax.patches:
-        if p.get_width() <1:
-            temp_anotate=round(p.get_width(),2)
-
-        else:
-            temp_anotate = f'{p.get_width():,.0f}'
-            
         ax.annotate(temp_anotate, (p.get_width()/2, p.get_y() + p.get_height() / 2.),
-                    ha='center', va='center', xytext=(10, 0), textcoords='offset points')
+                    ha='center', va='center', xytext=(10, 0), textcoords='offset points')      
     return fig
 
 def main():
