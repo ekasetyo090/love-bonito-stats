@@ -12,9 +12,6 @@ web app ini dibuat untuk mempermudah memahami statistik data dengan cara visuali
 ## Table of Contents
 
 - [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
-
 
 ## Screenshots
 Here are some screenshots illustrating the web app's visualizations:
