@@ -49,6 +49,8 @@ def timeline_line_plot(df,title:str):
     ax = sns.lineplot(data=df, x='date', y='traffic')
     ax.set(ylabel="traffic")
     ax.set_title(title)
+    for tick in ax.get_xticklabels():
+        tick.set_rotation(45)
     return fig
 
 def geoMap_plot(df,title:str):
@@ -118,9 +120,39 @@ def main_data_plot(temp_df,labels:str,sort_labels:list,ascendings,numbers:int,ye
             # Rotating X-axis labels
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
-        ax.annotate(temp_anotate, (p.get_width()/2, p.get_y() + p.get_height() / 2.),
+        ax.annotate(temp_anotate, (p.get_width()/2, p.get_y() + p.get_height()/ 2.),
                     ha='center', va='center', xytext=(10, 0), textcoords='offset points')      
     return fig
+
+def df_timeline_agregate_processing(df):
+    df['month'] = df['date'].dt.month_name()
+    df['month_number'] = df['date'].dt.month
+    df = df.groupby(by=['month','month_number']).agg({'traffic': 'mean'})
+    df = df.sort_values('month_number',ascending=True).reset_index()
+    return df
+
+def df_timeline_agregate_ploting(df,titles=str):
+    colors = []
+    for i in range(0,len(df),1):
+        if df['traffic'].iloc[i] == df['traffic'].max():
+            colors.append('#fc0303')
+        else:
+            colors.append('#f76565')
+    fig = plt.figure(figsize=(8.5, 2))
+    ax = sns.barplot(data=df, x='month', y='traffic',hue='month',palette=colors)
+    ax.set(ylabel="Search Traffic",xlabel='Month')
+    ax.set_title(titles)
+    for p in ax.patches:
+
+        temp_anotate=round(p.get_height(),2)
+
+        ax.annotate(temp_anotate, (p.get_x() + p.get_width() / 2., p.get_y() + p.get_height() / 2.),
+                ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+
+    for tick in ax.get_xticklabels():
+            tick.set_rotation(20)
+    return fig 
+    
 
 def main():
     df = load_csv('getLayoutQueryData.csv')
@@ -130,7 +162,7 @@ def main():
 
     tab1, tab2 = st.tabs(["Visualization", "Data Preview"])
     with tab1:
-        st.header('Visualization')
+        st.header('Overall')
 
     # Total Statistics
         col1, col2, col3 = st.columns(3,gap="small")
@@ -151,6 +183,18 @@ def main():
 
     # Search Traffic
         st.write('---')
+        st.header('Search Traffic')
+        col1, col2 = st.columns([1,3],gap="small")
+        with col1:
+            search_traffic_year_select_box = st.selectbox('Select Year',['All',2019,2020,2021,2022,2023,'Last 12 Month'],index=0,)
+        if isinstance(search_traffic_year_select_box, int):
+            df_timeline = df_timeline.loc[(df_timeline['date'].dt.year == search_traffic_year_select_box)]
+            st.write(search_traffic_year_select_box)
+        else:
+            if search_traffic_year_select_box == 'Last 12 Month':
+                df_timeline = df_timeline.iloc[-(4*12):]
+            else:
+                pass
         col1, col2 = st.columns(2,gap="small")
         with col1:
             st.subheader('Search Traffic Region (ID)')
@@ -161,6 +205,12 @@ def main():
             st.subheader('Search Traffic By Province Region (ID)')
             temp_plot = geoMap_plot(df_geomap,title='Search Traffic By Province On Google Trends Past 12 Month ')
             st.pyplot(fig=temp_plot, clear_figure=None, use_container_width=True)
+        st.header('Monthly Average Search Traffic 5 Past Years')
+        df_timeline_agg = df_timeline_agregate_processing(load_timeline_gtrend_csv('multiTimeline.csv'))
+        temp_plot = df_timeline_agregate_ploting(df_timeline_agg,titles='Monthly Average Traffic Search')
+        st.pyplot(fig=temp_plot, clear_figure=None, use_container_width=True)
+
+
 
     # Main Data Visualize
         st.write('---')
